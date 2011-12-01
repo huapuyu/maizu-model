@@ -21,7 +21,6 @@ public class Data implements Serializable {
 	private static final long serialVersionUID = 2757892825868662843L;
 
 	public enum DataType {
-
 		/**
 		 * 0：朝向（房屋）
 		 */
@@ -88,10 +87,6 @@ public class Data implements Serializable {
 		RENT_PERIOD
 	}
 
-	public Data(Long id) {
-		this.id = id;
-	}
-
 	/**
 	 * 编号（主键）
 	 */
@@ -115,6 +110,10 @@ public class Data implements Serializable {
 	private Boolean enable = true;
 
 	public Data() {
+	}
+
+	public Data(Long id) {
+		this.id = id;
 	}
 
 	public Long getId() {

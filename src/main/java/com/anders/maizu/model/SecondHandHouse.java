@@ -2,11 +2,10 @@ package com.anders.maizu.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,16 +13,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * 二手房
  * 
- * @author Anders
+ * @author Anders Zhu
  * 
  */
 @Entity
@@ -49,19 +47,19 @@ public class SecondHandHouse implements Serializable {
 	@Column(nullable = false, length = 50)
 	private String name;
 	/**
-	 * 省、自治区、直辖市编号（对应区域配置表类型0）
+	 * 省、自治区、直辖市（对应区域配置表类型0）
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "province_id")
 	private Area province;
 	/**
-	 * 城市编号（对应区域配置表类型1）
+	 * 城市（对应区域配置表类型1）
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "city_id")
 	private Area city;
 	/**
-	 * 区、县、市编号（对应区域配置表类型2）
+	 * 区、县、市（对应区域配置表类型2）
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "district_id")
@@ -198,17 +196,276 @@ public class SecondHandHouse implements Serializable {
 	/**
 	 * 配套设施
 	 */
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "secondHandHouse")
-	private Set<FacilityToSecondHandHouse> facilityToSecondHandHouses = Collections.emptySet();
+	@ManyToMany(targetEntity = Data.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "rlt_shh_to_facility", joinColumns = @JoinColumn(name = "shh_id"), inverseJoinColumns = @JoinColumn(name = "data_id"))
+	private List<Data> facilities = new ArrayList<Data>();
 	/**
 	 * 房源特色
 	 */
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "secondHandHouse")
-	private Set<FeatureToSecondHandHouse> featureToSecondHandHouses = Collections.emptySet();
+	@ManyToMany(targetEntity = Data.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "rlt_shh_to_feature", joinColumns = @JoinColumn(name = "shh_id"), inverseJoinColumns = @JoinColumn(name = "data_id"))
+	private List<Data> features = new ArrayList<Data>();
 	/**
 	 * 有效期
 	 */
-	@Temporal(TemporalType.TIMESTAMP)
+	// @Temporal(TemporalType.TIMESTAMP)
+	@Column
 	private Date expiration;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Area getProvince() {
+		return province;
+	}
+
+	public void setProvince(Area province) {
+		this.province = province;
+	}
+
+	public Area getCity() {
+		return city;
+	}
+
+	public void setCity(Area city) {
+		this.city = city;
+	}
+
+	public Area getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(Area district) {
+		this.district = district;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public BigDecimal getBuildingArea() {
+		return buildingArea;
+	}
+
+	public void setBuildingArea(BigDecimal buildingArea) {
+		this.buildingArea = buildingArea;
+	}
+
+	public BigDecimal getUsableArea() {
+		return usableArea;
+	}
+
+	public void setUsableArea(BigDecimal usableArea) {
+		this.usableArea = usableArea;
+	}
+
+	public Byte getBedroomCount() {
+		return bedroomCount;
+	}
+
+	public void setBedroomCount(Byte bedroomCount) {
+		this.bedroomCount = bedroomCount;
+	}
+
+	public Byte getLivingRoomCount() {
+		return livingRoomCount;
+	}
+
+	public void setLivingRoomCount(Byte livingRoomCount) {
+		this.livingRoomCount = livingRoomCount;
+	}
+
+	public Byte getKitchenCount() {
+		return kitchenCount;
+	}
+
+	public void setKitchenCount(Byte kitchenCount) {
+		this.kitchenCount = kitchenCount;
+	}
+
+	public Byte getWashroomCount() {
+		return washroomCount;
+	}
+
+	public void setWashroomCount(Byte washroomCount) {
+		this.washroomCount = washroomCount;
+	}
+
+	public Byte getBalconyCount() {
+		return balconyCount;
+	}
+
+	public void setBalconyCount(Byte balconyCount) {
+		this.balconyCount = balconyCount;
+	}
+
+	public Data getConstructionYear() {
+		return constructionYear;
+	}
+
+	public void setConstructionYear(Data constructionYear) {
+		this.constructionYear = constructionYear;
+	}
+
+	public Byte getTotalFloor() {
+		return totalFloor;
+	}
+
+	public void setTotalFloor(Byte totalFloor) {
+		this.totalFloor = totalFloor;
+	}
+
+	public Byte getFloor() {
+		return floor;
+	}
+
+	public void setFloor(Byte floor) {
+		this.floor = floor;
+	}
+
+	public Data getOrientation() {
+		return orientation;
+	}
+
+	public void setOrientation(Data orientation) {
+		this.orientation = orientation;
+	}
+
+	public Data getPropertyType() {
+		return propertyType;
+	}
+
+	public void setPropertyType(Data propertyType) {
+		this.propertyType = propertyType;
+	}
+
+	public Data getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(Data decoration) {
+		this.decoration = decoration;
+	}
+
+	public Data getPropertyRight() {
+		return propertyRight;
+	}
+
+	public void setPropertyRight(Data propertyRight) {
+		this.propertyRight = propertyRight;
+	}
+
+	public Data getResidenceType() {
+		return residenceType;
+	}
+
+	public void setResidenceType(Data residenceType) {
+		this.residenceType = residenceType;
+	}
+
+	public Data getConstructionType() {
+		return constructionType;
+	}
+
+	public void setConstructionType(Data constructionType) {
+		this.constructionType = constructionType;
+	}
+
+	public Data getBuildingStructure() {
+		return buildingStructure;
+	}
+
+	public void setBuildingStructure(Data buildingStructure) {
+		this.buildingStructure = buildingStructure;
+	}
+
+	public Data getVisitTime() {
+		return visitTime;
+	}
+
+	public void setVisitTime(Data visitTime) {
+		this.visitTime = visitTime;
+	}
+
+	public String getTransport() {
+		return transport;
+	}
+
+	public void setTransport(String transport) {
+		this.transport = transport;
+	}
+
+	public String getEnvironment() {
+		return environment;
+	}
+
+	public void setEnvironment(String environment) {
+		this.environment = environment;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public List<Data> getFacilities() {
+		return facilities;
+	}
+
+	public void setFacilities(List<Data> facilities) {
+		this.facilities = facilities;
+	}
+
+	public List<Data> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(List<Data> features) {
+		this.features = features;
+	}
+
+	public Date getExpiration() {
+		return expiration;
+	}
+
+	public void setExpiration(Date expiration) {
+		this.expiration = expiration;
+	}
 
 }
